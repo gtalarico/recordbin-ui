@@ -3,16 +3,19 @@
 
     <el-container>
       <el-header style="text-align: right; font-size: 12px">
-        <span>Tom</span>
+        <router-link tag="a"
+                     :to="{'name': 'login'}">Login</router-link>
+        <router-link tag="a"
+                     :to="{'name': 'records'}">Records</router-link>
       </el-header>
       <el-main>
         <el-row type="flex"
                 class="row-bg"
                 justify="center">
-          <!-- <img src='@/assets/logo.png'
-               class="justify-center" /> -->
+          <img src='@/assets/logo.png'
+               class="justify-center" />
         </el-row>
-        <login></login>
+        <router-view />
       </el-main>
     </el-container>
 
@@ -20,12 +23,10 @@
 </template>
 
 <script>
-import Login from './views/Login.vue'
 
 export default {
   name: 'app',
   components: {
-    Login
   },
   data () {
     return {

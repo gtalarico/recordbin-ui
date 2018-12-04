@@ -21,6 +21,37 @@ $axios.interceptors.response.use(
   }
 )
 
+$axios.interceptors.request.use(config => {
+  if (config.noIntercept) return config
+
+  return new Promise((resolve, reject) => {
+    if (jwtToken.hasValidToken()) {
+      return resolve()
+    }
+    if (jwtToken.hasValidRefreshToken()) {
+      const payload = { token: jwtToken.load() }
+      $backend
+        .refresh(payload)
+        .then(responseData => {
+          console.log("Token Refreshsed!")
+          resolve()
+        })
+        .catch(error => {
+          reject(error)
+        })
+    } else {
+      reject(`No or Invalid token`)
+    }
+  })
+    .then(() => {
+      // config.headers["Authorization"] = responseData.token
+      return Promise.resolve(config)
+    })
+    .catch(error => {
+      console.log(error)
+    })
+})
+
 let $backend = {}
 
 $backend.fetch = resourceName => {
@@ -34,17 +65,33 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
-  return $axios.post("/api/v1/auth/token-new/", form).then(response => {
-    const rawToken = response.data.token
-    jwtToken.dump(rawToken)
-    $axios.defaults.headers = { Authorization: `JWT ${rawToken}` }
-  })
+  return $axios
+    .post("/api/v1/auth/token-new/", form, { noIntercept: true })
+    .then(response => {
+      const rawToken = response.data.token
+      jwtToken.dump(rawToken)
+      $axios.defaults.headers = { Authorization: `JWT ${rawToken}` }
+    })
 }
 
-// $backend.isLoggedIn = () => {
-//   if (jwtToken.hasValidToken()) {
+$backend.refresh = payload => {
+  return $axios
+    .post("/api/v1/auth/token-refresh/", payload, { noIntercept: true })
+    .then(response => {
+      const rawToken = response.data.token
+      jwtToken.dump(rawToken)
+      $axios.defaults.headers = { Authorization: `JWT ${rawToken}` }
+    })
+}
 
-//   }
-// }
+$backend.verify = payload => {
+  return $axios
+    .post("/api/v1/auth/token-verify/", payload, { noIntercept: true })
+    .then(response => {
+      if (response.status === 200 && response.data.token) {
+        return response.data
+      }
+    })
+}
 
 export default $backend

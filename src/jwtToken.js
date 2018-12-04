@@ -13,32 +13,36 @@ function loadParsed() {
   return load() ? jwt_decode(token) : null
 }
 
-function hasValidToken() {
-  const token = load()
-  if (!token) {
-    return false
-  }
-  const decoded = jwt_decode(token)
-  // const exp = decoded.exp
-  // const orig_iat = decode.orig_iat
-  const now = new Date().now() / 1000
-  if (decoded.exp > now) {
-    return true
-    /* expired: refresh */
-  }
+function isInFuture(timeInSeconds) {
+  const seconds = 1000
+  const now = new Date().getTime()
+  const nowInSeconds = Math.round(now / seconds)
+  const bool = timeInSeconds > nowInSeconds
+  console.log(`Time Check Valid: ${bool}`)
+  return bool
+}
 
-  // if (exp - Date.now() / 1000 < 1800 && Date.now() / 1000 - orig_iat < 628200) {
-  //   //   this.dispatch("refreshToken")
-  // } else if (exp - Date.now() / 1000 < 1800) {
-  //   //   // DO NOTHING, DO NOT REFRESH
-  // } else {
-  //   //   // PROMPT USER TO RE-LOGIN, THIS ELSE CLAUSE COVERS THE CONDITION WHERE A TOKEN IS EXPIRED AS WELL
-  // }
+function hasToken() {
+  return Boolean(load())
+}
+
+function hasValidToken() {
+  const parsedToken = loadParsed()
+  return isInFuture(parsedToken.exp)
+}
+
+function hasValidRefreshToken() {
+  const parsedToken = loadParsed()
+  const refreshLengthInSeconds = 604800 // 7 Days
+  const refreshExpiration = parsedToken.orig_iat + refreshLengthInSeconds
+  return isInFuture(refreshExpiration)
 }
 
 export default {
   dump,
   load,
   loadParsed,
-  isExpired
+  hasToken,
+  hasValidToken,
+  hasValidRefreshToken
 }
