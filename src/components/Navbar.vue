@@ -47,6 +47,7 @@ export default {
   methods: {
     doLogout () {
       this.$backend.logout()
+      this.$router.push({ name: 'login' })
     }
   }
 };

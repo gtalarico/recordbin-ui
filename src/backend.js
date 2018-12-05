@@ -3,7 +3,6 @@ import auth from "@/auth"
 
 let $axios = axios.create({
   timeout: 5000,
-  baseURL: auth.readServerUrl() || "/",
   headers: {
     "Content-Type": "application/json"
   }
@@ -27,6 +26,7 @@ $axios.interceptors.response.use(
 
 $axios.interceptors.request.use(config => {
   const token = auth.readToken()
+  config.baseURL = auth.readServerUrl()
   if (token) config.headers["Authorization"] = `UserToken ${token}`
   return config
 })
@@ -55,7 +55,7 @@ $backend.login = form => {
     })
     .catch(error => {
       if (typeof error.response === "undefined") {
-        throw Error("Invalid Server Url")
+        throw Error("Could not connect to server")
       } else {
         throw error
       }

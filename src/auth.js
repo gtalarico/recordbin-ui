@@ -6,7 +6,7 @@ function saveServerUrl(url) {
 }
 
 function readServerUrl() {
-  localStorage.getItem(SERVER_URL_KEY)
+  return localStorage.getItem(SERVER_URL_KEY)
 }
 
 function saveToken(token) {
