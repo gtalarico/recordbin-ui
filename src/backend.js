@@ -3,6 +3,7 @@ import auth from "@/auth"
 
 let $axios = axios.create({
   timeout: 5000,
+  baseURL: auth.readServerUrl() || "/",
   headers: {
     "Content-Type": "application/json"
   }
@@ -43,7 +44,8 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
-  $axios.defaults.baseURL = form.serverUrl
+  $axios.baseURL = form.serverUrl
+  auth.saveServerUrl(form.serverUrl)
   return $axios
     .post("/api/v1/auth/token/login/", form)
     .then(response => {

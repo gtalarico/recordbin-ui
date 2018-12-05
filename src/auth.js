@@ -1,15 +1,24 @@
-const KEY_NAME = "recordbin_usertoken"
+const USER_TOKEN_KEY = "recordbin_usertoken"
+const SERVER_URL_KEY = "recordbin_serverurl"
+
+function saveServerUrl(url) {
+  localStorage.setItem(SERVER_URL_KEY, url)
+}
+
+function readServerUrl() {
+  localStorage.getItem(SERVER_URL_KEY)
+}
 
 function saveToken(token) {
-  localStorage.setItem(KEY_NAME, token)
+  localStorage.setItem(USER_TOKEN_KEY, token)
 }
 
 function readToken() {
-  return localStorage.getItem(KEY_NAME)
+  return localStorage.getItem(USER_TOKEN_KEY)
 }
 
 function clearToken() {
-  return localStorage.removeItem(KEY_NAME)
+  return localStorage.removeItem(USER_TOKEN_KEY)
 }
 
 function hasToken() {
@@ -17,6 +26,8 @@ function hasToken() {
 }
 
 export default {
+  saveServerUrl,
+  readServerUrl,
   saveToken,
   readToken,
   clearToken,

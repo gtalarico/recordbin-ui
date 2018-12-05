@@ -32,7 +32,7 @@
 </template>
 
 <script>
-
+import auth from '@/auth'
 
 export default {
   name: 'Login',
@@ -46,7 +46,7 @@ export default {
         login: null,
       },
       form: {
-        serverUrl: 'https://ww-recordbin.herokuapp.com',
+        serverUrl: auth.readServerUrl() || 'https://ww-recordbin.herokuapp.com',
         username: '',
         password: '',
       }
