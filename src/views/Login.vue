@@ -4,13 +4,21 @@
       <div class="card-content">
         <!-- <img src='@/assets/logo.png'> -->
         <div class="content">
+          <b-field label="Server URL"
+                   :message="errors.server"
+                   :type="{ 'is-danger': errors.server }">
+            <b-input placeholder="https://ww-recordbin.herokuapp.com"
+                     v-model="form.serverUrl">
+              ></b-input>
+          </b-field>
+
           <b-field label="Username">
             <b-input v-model="form.username"></b-input>
           </b-field>
 
           <b-field label="Password"
-                   :type="{ 'is-danger': loginErrors }"
-                   :message="loginErrors">
+                   :message="errors.login">
+            <!-- :type="{ 'is-danger': errors.login }" -->
             <b-input v-model="form.password"
                      type="password"></b-input>
           </b-field>
@@ -33,10 +41,14 @@ export default {
   },
   data () {
     return {
-      loginErrors: null,
+      errors: {
+        server: null,
+        login: null,
+      },
       form: {
+        serverUrl: 'https://ww-recordbin.herokuapp.com',
         username: '',
-        password: ''
+        password: '',
       }
     }
   },
@@ -49,7 +61,12 @@ export default {
       this.$backend.login(this.form).then(() => {
         this.$router.push('/')
       }).catch(error => {
-        this.loginErrors = Object.values(error.response.data).flat()
+        if (error.response) {
+          // Error Responses from server
+          this.errors.login = Object.values(error.response.data).flat()
+        } else {
+          this.errors.server = error.message
+        }
       })
     }
   }

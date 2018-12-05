@@ -2,7 +2,6 @@ import axios from "axios"
 import auth from "@/auth"
 
 let $axios = axios.create({
-  baseURL: "/api/v1/",
   timeout: 5000,
   headers: {
     "Content-Type": "application/json"
@@ -15,10 +14,12 @@ $axios.interceptors.response.use(
     return response
   },
   function(error) {
-    if (error.response.status == 401) {
+    if (typeof error.response === "undefined") {
+      console.error(error)
+    } else if (error.response.status == 401) {
+      console.warn("Invalid Credentials")
       auth.clearToken()
     }
-    console.warn(error)
     return Promise.reject(error)
   }
 )
@@ -32,31 +33,42 @@ $axios.interceptors.request.use(config => {
 let $backend = {}
 
 $backend.fetch = resourceName => {
-  const url = `${resourceName}/`
+  const url = `/api/v1/${resourceName}/`
   return $axios.get(url).then(response => response.data)
 }
 
 $backend.post = (resourceName, payload) => {
-  const url = `${resourceName}/`
+  const url = `/api/v1/${resourceName}/`
   return $axios.post(url, payload).then(response => response.data)
 }
 
 $backend.login = form => {
-  return $axios.post("auth/token/login/", form).then(response => {
-    const userToken = response.data["auth_token"]
-    auth.saveToken(userToken)
-    $axios.defaults.headers = { Authorization: `UserToken ${userToken}` }
-  })
+  $axios.defaults.baseURL = form.serverUrl
+  return $axios
+    .post("/api/v1/auth/token/login/", form)
+    .then(response => {
+      const userToken = response.data["auth_token"]
+      auth.saveToken(userToken)
+      $axios.defaults.headers = { Authorization: `UserToken ${userToken}` }
+    })
+    .catch(error => {
+      if (typeof error.response === "undefined") {
+        throw Error("Invalid Server Url")
+      } else {
+        throw Error(error)
+      }
+    })
 }
 
 $backend.logout = () => {
+  $axios.defaults.baseURL = ""
   auth.clearToken()
-  const url = `auth/tokens/logout/`
+  const url = `/api/v1/auth/tokens/logout/`
   return $axios.post(url).then()
 }
 
 $backend.getUser = () => {
-  return $axios.get("auth/users/me/").then(response => {
+  return $axios.get("/api/v1/auth/users/me/").then(response => {
     return response.data
   })
 }
