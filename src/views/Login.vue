@@ -46,7 +46,7 @@ export default {
   methods: {
     submitForm () {
       this.loginErrors = null
-      this.$backend.login(this.form).then(response => {
+      this.$backend.login(this.form).then(() => {
         this.$router.push('/')
       }).catch(error => {
         this.loginErrors = Object.values(error.response.data).flat()
