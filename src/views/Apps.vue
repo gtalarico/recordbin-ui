@@ -4,9 +4,6 @@
     <b-table :data="data"
              :checked-rows.sync="checkedRows"
              :is-row-checkable="(row) => row.id !== 3"
-             :opened-detailed="openedDetail"
-             detailed
-             detail-key="id"
              hoverable>
       <!-- checkable -->
       <!-- striped -->
@@ -22,15 +19,17 @@
                             label="Id">
               {{ props.row.id.split('-')[0] }}
             </b-table-column> -->
+        <b-table-column field="name"
+                        label="App Name">
+          {{ props.row.name }}
+        </b-table-column>
+        <b-table-column field="owner"
+                        label="Owner">
+          {{ props.row.owner }}
+        </b-table-column>
         <b-table-column field="created_on"
                         label="Created On">
           {{ props.row.created_on | formatTime }}
-        </b-table-column>
-        <b-table-column field="app"
-                        label="App">
-          <span class="tag">
-            {{ props.row.app }}
-          </span>
         </b-table-column>
       </template>
 
@@ -46,18 +45,13 @@
       </template>
 
     </b-table>
-    <!-- <button class="button field is-danger"
-            @click="checkedRows = []"
-            :disabled="!checkedRows.length">
-      <b-icon icon="close"></b-icon>
-      <span>Clear checked</span>
-    </button> -->
+
   </section>
 </template>
 
 <script>
 export default {
-  name: 'Records',
+  name: 'Apps',
   props: {
   },
   data () {
@@ -68,21 +62,12 @@ export default {
     }
   },
   mounted () {
-    this.$backend.fetch('records').then(records => this.data = records)
+    this.$backend.fetch('apps').then(apps => this.data = apps)
   }
 }
 </script>
 
 <style lang="sass">
-
-tr.detail
-  td, div
-    margin: 0
-    padding: 0 !important
-  pre
-    padding: 20
-
-
 
 
 </style>

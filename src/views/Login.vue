@@ -1,38 +1,31 @@
 <template>
-  <el-row type="flex"
-          class="row-bg"
-          justify="center">
-    <el-col :span="12">
-      <el-card shadow="always">
-        <el-form :model="form"
-                 status-icon
-                 ref="form"
-                 class="demo-ruleForm">
-          <!-- label-width="120px" -->
-          <el-form-item label="Username"
-                        prop="username">
-            <el-input type="text"
-                      v-model="form.username"
-                      autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="Confirm"
-                        prop="password">
-            <el-input type="password"
-                      v-model="form.password"
-                      autocomplete="off"></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary"
-                       @click="submitForm()">Submit</el-button>
-          </el-form-item>
-        </el-form>
-      </el-card>
-      {{response}}
-    </el-col>
-  </el-row>
+  <form>
+    <div class="card">
+      <div class="card-content">
+        <!-- <img src='@/assets/logo.png'> -->
+        <div class="content">
+          <b-field label="Username">
+            <b-input v-model="form.username"></b-input>
+          </b-field>
+
+          <b-field label="Password"
+                   :type="{ 'is-danger': loginErrors }"
+                   :message="loginErrors">
+            <b-input v-model="form.password"
+                     type="password"></b-input>
+          </b-field>
+          <a class="button"
+             @click="submitForm()"
+             :disabled="!form.username || !form.password">Login</a>
+        </div>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>
+
+
 export default {
   name: 'Login',
   props: {
@@ -40,22 +33,31 @@ export default {
   },
   data () {
     return {
-      response: null,
+      loginErrors: null,
       form: {
         username: '',
         password: ''
       }
     }
   },
+  computed: {
+
+  },
   methods: {
     submitForm () {
+      this.loginErrors = null
       this.$backend.login(this.form).then(response => {
-        this.response = response
+        this.$router.push('/')
+      }).catch(error => {
+        this.loginErrors = Object.values(error.response.data).flat()
       })
     }
   }
 }
 </script>
 
-<style scoped>
+<style scoped lang="sass">
+.card
+  margin: 0 auto
+  max-width: 50%
 </style>

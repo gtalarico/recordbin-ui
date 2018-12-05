@@ -1,12 +1,11 @@
 import axios from "axios"
-import jwtToken from "@/jwtToken"
+import auth from "@/auth"
 
 let $axios = axios.create({
-  // baseURL: "/api/v1",
+  baseURL: "/api/v1/",
   timeout: 5000,
   headers: {
-    "Content-Type": "application/json",
-    Authorization: `JWT ${jwtToken.load()}`
+    "Content-Type": "application/json"
   }
 })
 
@@ -16,82 +15,50 @@ $axios.interceptors.response.use(
     return response
   },
   function(error) {
+    if (error.response.status == 401) {
+      auth.clearToken()
+    }
     console.warn(error)
     return Promise.reject(error)
   }
 )
 
 $axios.interceptors.request.use(config => {
-  if (config.noIntercept) return config
-
-  return new Promise((resolve, reject) => {
-    if (jwtToken.hasValidToken()) {
-      return resolve()
-    }
-    if (jwtToken.hasValidRefreshToken()) {
-      const payload = { token: jwtToken.load() }
-      $backend
-        .refresh(payload)
-        .then(responseData => {
-          console.log("Token Refreshsed!")
-          resolve()
-        })
-        .catch(error => {
-          reject(error)
-        })
-    } else {
-      reject(`No or Invalid token`)
-    }
-  })
-    .then(() => {
-      // config.headers["Authorization"] = responseData.token
-      return Promise.resolve(config)
-    })
-    .catch(error => {
-      console.log(error)
-    })
+  const token = auth.readToken()
+  if (token) config.headers["Authorization"] = `UserToken ${token}`
+  return config
 })
 
 let $backend = {}
 
 $backend.fetch = resourceName => {
-  const url = `/api/v1/${resourceName}/`
+  const url = `${resourceName}/`
   return $axios.get(url).then(response => response.data)
 }
 
 $backend.post = (resourceName, payload) => {
-  const url = `/api/v1/${resourceName}/`
+  const url = `${resourceName}/`
   return $axios.post(url, payload).then(response => response.data)
 }
 
 $backend.login = form => {
-  return $axios
-    .post("/api/v1/auth/token-new/", form, { noIntercept: true })
-    .then(response => {
-      const rawToken = response.data.token
-      jwtToken.dump(rawToken)
-      $axios.defaults.headers = { Authorization: `JWT ${rawToken}` }
-    })
+  return $axios.post("auth/token/login/", form).then(response => {
+    const userToken = response.data["auth_token"]
+    auth.saveToken(userToken)
+    $axios.defaults.headers = { Authorization: `UserToken ${userToken}` }
+  })
 }
 
-$backend.refresh = payload => {
-  return $axios
-    .post("/api/v1/auth/token-refresh/", payload, { noIntercept: true })
-    .then(response => {
-      const rawToken = response.data.token
-      jwtToken.dump(rawToken)
-      $axios.defaults.headers = { Authorization: `JWT ${rawToken}` }
-    })
+$backend.logout = () => {
+  auth.clearToken()
+  const url = `auth/tokens/logout/`
+  return $axios.post(url).then()
 }
 
-$backend.verify = payload => {
-  return $axios
-    .post("/api/v1/auth/token-verify/", payload, { noIntercept: true })
-    .then(response => {
-      if (response.status === 200 && response.data.token) {
-        return response.data
-      }
-    })
+$backend.getUser = () => {
+  return $axios.get("auth/users/me/").then(response => {
+    return response.data
+  })
 }
 
 export default $backend

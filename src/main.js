@@ -3,7 +3,8 @@ import App from "@/App.vue"
 
 import router from "@/router"
 import $backend from "@/backend"
-import "./plugins/element.js"
+import "@/filters"
+import "@/plugins/buefy.js"
 Vue.prototype.$backend = $backend
 Vue.config.productionTip = false
 
