@@ -55,7 +55,7 @@ $backend.login = form => {
       if (typeof error.response === "undefined") {
         throw Error("Invalid Server Url")
       } else {
-        throw Error(error)
+        throw error
       }
     })
 }

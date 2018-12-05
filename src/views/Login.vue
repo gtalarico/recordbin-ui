@@ -17,8 +17,8 @@
           </b-field>
 
           <b-field label="Password"
-                   :message="errors.login">
-            <!-- :type="{ 'is-danger': errors.login }" -->
+                   :message="errors.login"
+                   :type="{ 'is-danger': errors.login }">
             <b-input v-model="form.password"
                      type="password"></b-input>
           </b-field>
@@ -61,6 +61,7 @@ export default {
       this.$backend.login(this.form).then(() => {
         this.$router.push('/')
       }).catch(error => {
+        debugger
         if (error.response) {
           // Error Responses from server
           this.errors.login = Object.values(error.response.data).flat()
