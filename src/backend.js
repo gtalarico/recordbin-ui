@@ -1,5 +1,5 @@
 import axios from "axios"
-import auth from "@/auth"
+import store from "@/store"
 
 let $axios = axios.create({
   timeout: 5000,
@@ -18,16 +18,17 @@ $axios.interceptors.response.use(
       console.error(error)
     } else if (error.response.status == 401) {
       console.warn("Invalid Credentials")
-      auth.clearToken()
+      store.commit("api/clearUserToken")
     }
     return Promise.reject(error)
   }
 )
 
 $axios.interceptors.request.use(config => {
-  const token = auth.readToken()
-  config.baseURL = auth.readServerUrl()
-  if (token) config.headers["Authorization"] = `UserToken ${token}`
+  const userToken = store.state.api.userToken
+  const serverUrl = store.state.api.serverUrl
+  if (userToken) config.headers.Authorization = `UserToken ${userToken}`
+  if (serverUrl) config.baseURL = serverUrl
   return config
 })
 
@@ -44,14 +45,12 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
-  $axios.baseURL = form.serverUrl
-  auth.saveServerUrl(form.serverUrl)
   return $axios
     .post("/api/v1/auth/token/login/", form)
     .then(response => {
       const userToken = response.data["auth_token"]
-      auth.saveToken(userToken)
-      $axios.defaults.headers = { Authorization: `UserToken ${userToken}` }
+      // Token is passed back to login option, which will store for later
+      return userToken
     })
     .catch(error => {
       if (typeof error.response === "undefined") {
@@ -63,10 +62,7 @@ $backend.login = form => {
 }
 
 $backend.logout = () => {
-  $axios.defaults.baseURL = ""
-  auth.clearToken()
-  const url = `/api/v1/auth/tokens/logout/`
-  return $axios.post(url).then()
+  return $axios.post(`/api/v1/auth/token/logout/`)
 }
 
 $backend.getUser = () => {

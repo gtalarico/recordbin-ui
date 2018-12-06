@@ -10,19 +10,19 @@
              height="25">
       </a>
 
-      <router-link v-show="hasToken"
+      <router-link v-show="isLoggedIn"
                    tag="a"
                    class="navbar-item"
                    :to="{'name': 'records'}">Records</router-link>
-      <router-link v-show="hasToken"
+      <router-link v-show="isLoggedIn"
                    tag="a"
                    class="navbar-item"
                    :to="{'name': 'apps'}">Apps</router-link>
-      <router-link v-show="!hasToken"
+      <router-link v-show="!isLoggedIn"
                    tag="a"
                    class="navbar-item"
                    :to="{'name': 'login'}">Login</router-link>
-      <a v-show="hasToken"
+      <a v-show="isLoggedIn"
          class="navbar-item"
          @click="doLogout()">Logout</a>
     </div>
@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 
 export default {
   name: "Navbar",
@@ -39,15 +40,19 @@ export default {
       isActive: false
     };
   },
+  mounted () {
+
+  },
   computed: {
-    hasToken () {
-      return localStorage.getItem("recordbin_usertoken")
-    }
+    ...mapGetters({
+      isLoggedIn: 'api/isLoggedIn'
+    })
   },
   methods: {
     doLogout () {
-      this.$backend.logout()
-      this.$router.push({ name: 'login' })
+      this.$store.dispatch('api/logout').then(() => {
+        this.$router.push({ name: 'login' })
+      })
     }
   }
 };

@@ -2,14 +2,21 @@ import Vue from "vue"
 import App from "@/App.vue"
 
 import router from "@/router"
-import $backend from "@/backend"
+import store from "@/store"
+import backend from "@/backend"
+
 import "@/filters"
 import "@/plugins/buefy.js"
-Vue.prototype.$backend = $backend
+
 Vue.config.productionTip = false
+Vue.prototype.$backend = backend
 
 const vue = new Vue({
   router,
+  store,
+  beforeCreate() {
+    this.$store.commit("initStore")
+  },
   render: h => h(App)
 })
 

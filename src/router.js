@@ -1,12 +1,14 @@
 import Vue from "vue"
 import Router from "vue-router"
+
+import store from "@/store"
 import Login from "@/views/Login"
 import Records from "@/views/Records"
 import Apps from "@/views/Apps"
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: "/",
@@ -16,12 +18,14 @@ export default new Router({
     {
       path: "/records",
       name: "records",
-      component: Records
+      component: Records,
+      meta: { requiresAuth: true }
     },
     {
       path: "/apps",
       name: "apps",
-      component: Apps
+      component: Apps,
+      meta: { requiresAuth: true }
     },
     {
       path: "/login",
@@ -30,3 +34,14 @@ export default new Router({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.meta.requiresAuth
+  const isLoggedIn = store.getters["api/isLoggedIn"]
+  if (requiresAuth && !isLoggedIn) {
+    return next("/login")
+  }
+  next()
+})
+
+export default router

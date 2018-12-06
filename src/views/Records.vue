@@ -24,7 +24,7 @@
             </b-table-column> -->
         <b-table-column field="created_on"
                         label="Created On">
-          {{ props.row.created_on | formatTime }}
+          {{ props.row.created_on | formatDatetime }}
         </b-table-column>
         <b-table-column field="app"
                         label="App">

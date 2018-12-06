@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "yarn run build",
-    "serve-dist": "node ./src/serve.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "yarn run build",
+    "serve-dist": "node ./src/serve.js"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -16,7 +16,8 @@
     "jwt-decode": "^2.2.0",
     "serve-static": "^1.13.2",
     "vue": "^2.5.17",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
