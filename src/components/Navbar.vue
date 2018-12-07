@@ -23,7 +23,7 @@
                    class="navbar-item"
                    :to="{'name': 'login'}">Login</router-link>
       <a v-show="isLoggedIn"
-         class="navbar-item button"
+         class="navbar-item"
          @click="doLogout()">Logout</a>
       <span v-show="isLoggedIn"
             class="navbar-item is-size-7 has-text-grey">{{userEmail}}</span>

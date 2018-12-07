@@ -35,13 +35,20 @@
 
       <template slot="detail"
                 slot-scope="props">
-        <!-- <article class="media"> -->
-        <!-- <div class="media-content"> -->
-        <!-- <div class="content"> -->
         <pre class="code-detail">{{props.row.data}}</pre>
-        <!-- </div> -->
-        <!-- </div> -->
-        <!-- </article> -->
+      </template>
+
+      <template slot="empty">
+        <section class="section">
+          <div class="content has-text-grey has-text-centered">
+            <p>
+              <b-icon icon="emoticon-sad"
+                      size="is-large">
+              </b-icon>
+            </p>
+            <p>No Apps</p>
+          </div>
+        </section>
       </template>
 
     </b-table>
