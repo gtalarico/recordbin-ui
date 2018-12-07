@@ -15,7 +15,7 @@ $axios.interceptors.response.use(
   },
   function(error) {
     if (typeof error.response === "undefined") {
-      console.error(error)
+      throw error
     } else if (error.response.status == 401) {
       console.warn("Invalid Credentials")
       store.commit("api/clearUserToken")
@@ -45,20 +45,17 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
-  return $axios
-    .post("/api/v1/auth/token/login/", form)
-    .then(response => {
-      const userToken = response.data["auth_token"]
-      // Token is passed back to login option, which will store for later
-      return userToken
-    })
-    .catch(error => {
-      if (typeof error.response === "undefined") {
-        throw Error("Could not connect to server")
-      } else {
-        throw error
-      }
-    })
+  return $axios.post("/api/v1/auth/token/login/", form).then(response => {
+    const userToken = response.data["auth_token"]
+    return userToken
+  })
+}
+
+$backend.register = form => {
+  return $axios.post("/api/v1/auth/users/", form).then(response => {
+    const user = response.data
+    return user
+  })
 }
 
 $backend.logout = () => {

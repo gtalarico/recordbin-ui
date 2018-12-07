@@ -4,7 +4,8 @@ export default {
   namespaced: true,
   state: {
     userToken: null,
-    serverUrl: null
+    serverUrl: null,
+    user: null
   },
   getters: {
     isLoggedIn: state => {
@@ -20,6 +21,12 @@ export default {
     },
     clearUserToken(state) {
       state.userToken = null
+    },
+    clearUser(state) {
+      state.user = null
+    },
+    setUser(state, value) {
+      state.user = value
     }
   },
   actions: {
@@ -29,13 +36,23 @@ export default {
         .login(form)
         .then(userToken => {
           context.commit("setUserToken", userToken)
+          backend.getUser().then(user => {
+            context.commit("setUser", user)
+          })
         })
         .catch(error => {
           throw error
         })
     },
+    register(context, form) {
+      context.commit("setServerUrl", form.serverUrl)
+      return backend.register(form)
+    },
     logout(context) {
-      return backend.logout().then(() => context.commit("clearUserToken"))
+      return backend.logout().then(() => {
+        context.commit("clearUserToken")
+        context.commit("clearUser")
+      })
     }
   }
 }
