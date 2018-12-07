@@ -25,8 +25,11 @@
                      type="password"></b-input>
           </b-field>
           <a class="button"
-             @click="submitForm()"
-             :disabled="!form.serverUrl || !form.username || !form.password">Login</a>
+             @click="doLogin()"
+             :disabled="formIsValid">Login</a>
+          <a class="button"
+             @click="doRegistration()"
+             :disabled="formIsValid">Register</a>
         </div>
       </div>
     </div>
@@ -45,6 +48,7 @@ export default {
       errors: {
         server: null,
         login: null,
+        registration: null,
       },
       form: {
         serverUrl: this.$store.state.api.serverUrl || 'https://ww-recordbin.herokuapp.com',
@@ -54,7 +58,9 @@ export default {
     }
   },
   computed: {
-
+    formIsValid () {
+      return !this.form.serverUrl || !this.form.username || !this.form.password
+    }
   },
   beforeMount () {
     // If Already Logged in, go home
@@ -63,10 +69,29 @@ export default {
     }
   },
   methods: {
-    submitForm () {
-      this.loginErrors = null
+    clearErrors () {
+      this.erorrs.login = null
+      this.erorrs.server = null
+      this.erorrs.registration = null
+    },
+    doLogin () {
+      this.clearErrors()
       this.$store.dispatch('api/login', this.form)
         .then(() => this.$router.push({ name: 'home' }))
+        .catch(error => {
+          console.log(error)
+          if (error.response) {
+            // Error Responses from server
+            this.errors.login = Object.values(error.response.data).flat()
+          } else {
+            this.errors.server = error.message
+          }
+        })
+    },
+    doRegistration () {
+      this.clearErrors()
+      this.$store.dispatch('api/register', this.form)
+        // .then(() => this.$router.push({ name: 'home' }))
         .catch(error => {
           console.log(error)
           if (error.response) {

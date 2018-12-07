@@ -34,6 +34,17 @@ export default {
           throw error
         })
     },
+    register(context, form) {
+      context.commit("setServerUrl", form.serverUrl)
+      return backend
+        .register(form)
+        .then(userToken => {
+          context.commit("setUserToken", userToken)
+        })
+        .catch(error => {
+          throw error
+        })
+    },
     logout(context) {
       return backend.logout().then(() => context.commit("clearUserToken"))
     }
