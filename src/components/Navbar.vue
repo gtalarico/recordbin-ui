@@ -23,22 +23,24 @@
                    class="navbar-item"
                    :to="{'name': 'login'}">Login</router-link>
       <a v-show="isLoggedIn"
-         class="navbar-item"
+         class="navbar-item button"
          @click="doLogout()">Logout</a>
+      <span v-show="isLoggedIn"
+            class="navbar-item is-size-7 has-text-grey">{{userEmail}}</span>
     </div>
   </nav>
 
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: "Navbar",
   data () {
     return {
-      isActive: false
-    };
+
+    }
   },
   mounted () {
 
@@ -46,7 +48,11 @@ export default {
   computed: {
     ...mapGetters({
       isLoggedIn: 'api/isLoggedIn'
-    })
+    }),
+    ...mapState('api', ['user']),
+    userEmail () {
+      return this.user ? this.user.email : ''
+    }
   },
   methods: {
     doLogout () {
