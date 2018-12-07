@@ -8,7 +8,7 @@
           <b-field label="Server URL"
                    :message="errors.server"
                    :type="{ 'is-danger': errors.server }">
-            <b-input placeholder="https://ww-recordbin.herokuapp.com"
+            <b-input placeholder="https://api.recordbin.co"
                      @input="clearErrors()"
                      v-model="form.serverUrl">
               ></b-input>
