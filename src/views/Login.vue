@@ -29,7 +29,7 @@
                      @input="clearErrors()"
                      type="password"></b-input>
           </b-field>
-          <button class="button is-primary"
+          <button class="button is-danger"
                   @click="doLogin()"
                   :disabled="formIsValid">Login</button>
           <button class="button is-pulled-right"

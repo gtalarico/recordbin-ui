@@ -53,6 +53,11 @@
 
     </b-table>
 
+    <div class="section">
+      <button class="button is-danger"
+              disabled>Add App</button>
+    </div>
+
   </section>
 </template>
 
