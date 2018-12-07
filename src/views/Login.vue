@@ -29,12 +29,12 @@
                      @input="clearErrors()"
                      type="password"></b-input>
           </b-field>
-          <a class="button is-primary"
-             @click="doLogin()"
-             :disabled="formIsValid">Login</a>
-          <a class="button is-pulled-right"
-             @click="doRegistration()"
-             :disabled="formIsValid">Register</a>
+          <button class="button is-primary"
+                  @click="doLogin()"
+                  :disabled="formIsValid">Login</button>
+          <button class="button is-pulled-right"
+                  @click="doRegistration()"
+                  :disabled="formIsValid">Register</button>
         </div>
       </div>
     </div>
@@ -92,14 +92,20 @@ export default {
         .catch(error => this.handleError(error))
     },
     handleError (error) {
-      console.log(error)
+      console.error(error)
       if (!error.response) {
         // No response. Is Connection error (or CORS)
         this.errors.server = error.message
+      } else if (error.response.status === 404) {
+        this.errors.server = 'Server not found'
       } else {
         const formErrors = error.response.data
-        for (var field in formErrors) {
-          this.errors[field] = formErrors[field]
+        if (formErrors.non_field_errors) {
+          this.errors.email = formErrors.non_field_errors
+        } else {
+          for (var field in formErrors) {
+            this.errors[field] = formErrors[field]
+          }
         }
       }
     }
