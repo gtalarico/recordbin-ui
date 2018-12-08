@@ -33,13 +33,9 @@ yarn run lint
 ## Deployment
 
 ```
-heroku login
-heroku app create <appname>
-heroku git:remote --app <appname>
-git push heroku
+make release
 ```
 
 ## TODO
 
 - [ ] Finish Record and App Table Views
-- [ ] Move Auth to Vuex Store

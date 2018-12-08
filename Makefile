@@ -1,4 +1,4 @@
-.PHONY: run deploy
+.PHONY: usage run build publish
 
 
 # Colors
@@ -14,7 +14,12 @@ usage:
 run:
 	yarn run serve
 
-## deploy
-deploy:
-	git push
-	git push heroku
+## build: builds app
+build:
+	yarn build
+
+## publish
+publish:
+	bash ./scripts/publish.sh
+
+release: build publish
