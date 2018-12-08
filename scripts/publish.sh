@@ -2,8 +2,9 @@ commit="$(git rev-parse --verify HEAD)"
 echo "Commit: $commit"
 
 mkdir temp
-cp -r .dist/ ./temp
+cp -r ./dist/ ./temp
 cd temp
+echo "www.recordbin.co" > CNAME
 git init
 git add .
 git commit -m "$commit" --allow-empty
