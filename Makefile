@@ -18,8 +18,14 @@ run:
 build:
 	yarn build
 
-## publish
+## publish: publish to github.com/record.co
 publish:
 	bash ./scripts/publish.sh
 
+## release: build and publish
 release: build publish
+
+## ci:
+ci: circleci local execute
+
+
