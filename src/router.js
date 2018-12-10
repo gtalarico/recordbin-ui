@@ -3,8 +3,8 @@ import Router from "vue-router"
 
 import store from "@/store"
 import Login from "@/views/Login"
-import Records from "@/views/Records"
-import Apps from "@/views/Apps"
+import AppRecords from "@/views/AppRecords"
+import AppsManager from "@/views/AppsManager"
 
 Vue.use(Router)
 
@@ -18,13 +18,13 @@ const router = new Router({
     {
       path: "/records",
       name: "records",
-      component: Records,
+      component: AppRecords,
       meta: { requiresAuth: true }
     },
     {
       path: "/apps",
       name: "apps",
-      component: Apps,
+      component: AppsManager,
       meta: { requiresAuth: true }
     },
     {

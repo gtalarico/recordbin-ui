@@ -1,7 +1,7 @@
 <template>
   <section>
 
-    <b-table :data="data"
+    <b-table :data="records.filter(r => r.app === selectedApp.name)"
              :checked-rows.sync="checkedRows"
              :is-row-checkable="(row) => row.id !== 3"
              :opened-detailed="openedDetail"
@@ -47,11 +47,10 @@
                       size="is-large">
               </b-icon>
             </p>
-            <p>No Records</p>
+            <p>No records for <strong>{{selectedApp.name}}</strong></p>
           </div>
         </section>
       </template>
-
     </b-table>
     <!-- <button class="button field is-danger"
             @click="checkedRows = []"
@@ -65,8 +64,10 @@
 <script>
 export default {
   name: 'Records',
-  props: {
-  },
+  props: [
+    'records',
+    'selectedApp'
+  ],
   data () {
     return {
       openedDetail: [],
@@ -75,7 +76,7 @@ export default {
     }
   },
   mounted () {
-    this.$backend.fetch('records').then(records => this.data = records)
+
   }
 }
 </script>

@@ -54,7 +54,7 @@
     </b-table>
 
     <div class="section">
-      <button class="button is-danger"
+      <button class="button is-small"
               disabled>Add App</button>
     </div>
 

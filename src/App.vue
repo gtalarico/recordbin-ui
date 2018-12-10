@@ -3,17 +3,15 @@
 
     <navbar />
 
-    <div class="container">
-      <div class="section">
-        <router-view />
-      </div>
-      <!-- <el-row type="flex"
+    <div class="content">
+      <router-view />
+    </div>
+    <!-- <el-row type="flex"
                 class="row-bg"
                 justify="center">
           <img src='@/assets/logo.png'
                class="justify-center" />
         </el-row> -->
-    </div>
   </div>
 </template>
 

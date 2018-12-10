@@ -12,14 +12,21 @@
 
       <router-link v-show="isLoggedIn"
                    tag="a"
+                   active-class="is-active"
                    class="navbar-item"
                    :to="{'name': 'records'}">Records</router-link>
       <router-link v-show="isLoggedIn"
                    tag="a"
+                   active-class="is-active"
                    class="navbar-item"
                    :to="{'name': 'apps'}">Apps</router-link>
+      <a v-show="serverUrl"
+         class="navbar-item"
+         :href="serverUrl"
+         target="blank">Api</a>
       <router-link v-show="!isLoggedIn"
                    tag="a"
+                   active-class="is-active"
                    class="navbar-item"
                    :to="{'name': 'login'}">Login</router-link>
       <a v-show="isLoggedIn"
@@ -27,6 +34,8 @@
          @click="doLogout()">Logout</a>
       <span v-show="isLoggedIn"
             class="navbar-item is-size-7 has-text-grey">{{userEmail}}</span>
+      <span v-show="isLoggedIn"
+            class="navbar-item is-size-7 has-text-grey">{{serverUrl}}</span>
     </div>
   </nav>
 
@@ -49,7 +58,7 @@ export default {
     ...mapGetters({
       isLoggedIn: 'api/isLoggedIn'
     }),
-    ...mapState('api', ['user']),
+    ...mapState('api', ['user', 'serverUrl']),
     userEmail () {
       return this.user ? this.user.email : ''
     }
