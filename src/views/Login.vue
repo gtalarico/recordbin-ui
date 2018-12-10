@@ -56,7 +56,7 @@ export default {
         password: null
       },
       form: {
-        serverUrl: this.$store.state.api.serverUrl || 'https://ww-recordbin.herokuapp.com',
+        serverUrl: this.$store.state.api.serverUrl || 'https://api.recordbin.co',
         email: '',
         password: '',
       }
