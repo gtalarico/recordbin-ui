@@ -34,10 +34,11 @@ export default {
   },
   actions: {
     login(context, form) {
+      // Must be set here, request interceptor
+      context.commit("setServerUrl", form.serverUrl)
       return backend
         .login(form)
         .then(userToken => {
-          context.commit("setServerUrl", form.serverUrl)
           context.commit("setUserToken", userToken)
           backend.getUser().then(user => {
             context.commit("setUser", user)
