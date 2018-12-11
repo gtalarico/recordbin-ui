@@ -1,5 +1,8 @@
 # RecordBin Ui
 
+This repo is the source code for the front end of
+[www.recordbin.co](https://www.recordbin.co)
+
 ## Project setup
 
 ```
@@ -9,33 +12,25 @@ yarn install
 ### Compiles and hot-reloads for development
 
 ```
-yarn run serve
+yarn serve
 ```
 
-### Compiles and minifies for production
+### Release
 
-```
-yarn run build
-```
+Compiles Vue app in the `dist/` folder and pushes it to
+[github.com/recordbinco/www.recordbin.co](https://github.com/recordbinco/www.recordbin.co).
 
-### Run your tests
-
-```
-yarn run test
-```
-
-### Lints and fixes files
-
-```
-yarn run lint
-```
-
-## Deployment
+The repo `recordbinco/www.recordbin.co` is served as
+a static website by Github Pages.
 
 ```
 make release
 ```
 
-## TODO
+### CI
 
-- [ ] Finish Record and App Table Views
+Runs install, build, tests(wip), and lint.
+
+```
+make ci
+```
