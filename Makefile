@@ -25,7 +25,12 @@ publish:
 ## release: build and publish
 release: build publish
 
-## ci:
-ci: circleci local execute
+## ci: Run CircleCi locally
+ci:
+	circleci local execute
+
+## lint: Run linter
+lint:
+	yarn run lint
 
 
