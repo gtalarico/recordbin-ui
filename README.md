@@ -1,5 +1,7 @@
 # RecordBin Ui
 
+[![CircleCI](https://circleci.com/gh/recordbinco/recordbin-ui.svg?style=svg)](https://circleci.com/gh/recordbinco/recordbin-ui)
+
 This repo is the source code for the front end of
 [www.recordbin.co](https://www.recordbin.co)
 
