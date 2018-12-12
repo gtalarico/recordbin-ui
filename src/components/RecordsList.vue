@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="selectedApp">
 
     <b-table :data="records.filter(r => r.app === selectedApp.name)"
              :checked-rows.sync="checkedRows"
