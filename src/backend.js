@@ -45,8 +45,15 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
+  // Using x-www-form-urlencoded allows the OPTIONS request to go through properly
+  // Without it Cors OPTIONS request fails the first time
+  // https://github.com/axios/axios/issues/475#issuecomment-404067328
+  const formData = `email=${form.email}&password=${form.password}`
+  const config = {
+    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+  }
   return $axios
-    .post("/api/v1/auth/token/login/", form, { withCredentials: true })
+    .post("/api/v1/auth/token/login/", formData, config)
     .then(response => {
       const userToken = response.data["auth_token"]
       return userToken
