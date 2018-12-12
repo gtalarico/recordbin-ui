@@ -45,10 +45,12 @@ $backend.post = (resourceName, payload) => {
 }
 
 $backend.login = form => {
-  return $axios.post("/api/v1/auth/token/login/", form).then(response => {
-    const userToken = response.data["auth_token"]
-    return userToken
-  })
+  return $axios
+    .post("/api/v1/auth/token/login/", form, { withCredentials: true })
+    .then(response => {
+      const userToken = response.data["auth_token"]
+      return userToken
+    })
 }
 
 $backend.register = form => {
